@@ -42,20 +42,12 @@ public class BookServiceDbAccessImplTest {
     @Test
     public void testCreateBook_successful() throws AppException {
 
-        when(booksDao.getBookByFeed(SOME_FEED)).thenReturn(null);
         when(booksDao.createBook(any(BookEntity.class))).thenReturn(CREATED_PODCAST_RESOURCE_ID);
 
         Book book = new Book();
-        book.setFeed(SOME_FEED);
         book.setTitle(SOME_TITLE);
         Long createBook = sut.createBook(book);
 
-        verify(booksDao).getBookByFeed(SOME_FEED);//verifies if the method booksDao.getBookByFeed has been called exactly once with that exact input parameter
-        verify(booksDao, times(1)).getBookByFeed(SOME_FEED);//same as above
-        verify(booksDao, times(1)).getBookByFeed(eq(SOME_FEED));//same as above
-        verify(booksDao, times(1)).getBookByFeed(anyString());//verifies if the method booksDao.getBookByFeed has been called exactly once with any string as input
-        verify(booksDao, atLeastOnce()).getBookByFeed(SOME_FEED);//verifies if the method booksDao.getBookByFeed has been called at least once with that exact input parameter		
-        verify(booksDao, atLeast(1)).getBookByFeed(SOME_FEED);//verifies if the method booksDao.getBookByFeed has been called at least once with that exact input parameter
         verify(booksDao, times(1)).createBook(any(BookEntity.class));
 
         Assert.assertTrue(createBook == CREATED_PODCAST_RESOURCE_ID);
@@ -64,11 +56,7 @@ public class BookServiceDbAccessImplTest {
     @Test(expected=AppException.class)
     public void testCreateBook_error() throws AppException {
 
-        BookEntity existingBook = new BookEntity();
-        when(booksDao.getBookByFeed(EXISTING_FEED)).thenReturn(existingBook);
-
         Book book = new Book();
-        book.setFeed(EXISTING_FEED);
         book.setTitle(SOME_TITLE);
         sut.createBook(book);
 
@@ -91,7 +79,6 @@ public class BookServiceDbAccessImplTest {
         exception.expectMessage("Provided data not sufficient for insertion");
 
         Book book = new Book();
-        book.setFeed(EXISTING_FEED);
         sut.createBook(book);
 
     }
@@ -106,14 +93,12 @@ public class BookServiceDbAccessImplTest {
         doNothing().when(booksDao).updateBook(any(BookEntity.class));
 
         Book book = new Book(bookEntity);
-        book.setFeed(SOME_FEED);
         book.setTitle(SOME_TITLE);
         sut.updatePartiallyBook(book);
 
         verify(booksDao).getBookById(SOME_ID);//verifies if the method booksDao.getBookById has been called exactly once with that exact input parameter
         verify(booksDao).updateBook(any(BookEntity.class));
 
-        Assert.assertTrue(book.getFeed() == SOME_FEED);
         Assert.assertTrue(book.getTitle() == SOME_TITLE);
     }
 

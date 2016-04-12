@@ -12,7 +12,7 @@
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="org.codingpedia.demo.rest.*" />
+    <context:component-scan base-package="org.laczkoboti.bookStore.*" />
 
     <!-- ************ JPA configuration *********** -->
     <tx:annotation-driven transaction-manager="transactionManager" />
@@ -22,8 +22,8 @@
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="persistenceXmlLocation" value="classpath:config/persistence-demo.xml" />
         <property name="persistenceUnitName" value="demoRestPersistence" />
-        <property name="dataSource" ref="restDemoDS" />
-        <property name="packagesToScan" value="org.codingpedia.demo.*" />
+        <property name="dataSource" ref="bookStoreDS" />
+        <property name="packagesToScan" value="org.laczkoboti.bookStore.*" />
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="showSql" value="true" />
@@ -32,14 +32,14 @@
         </property>
     </bean>
 
-    <bean id="bookDao" class="org.codingpedia.demo.rest.dao.BookDaoJPA2Impl"/>
-    <bean id="bookService" class="org.codingpedia.demo.rest.service.BookServiceDbAccessImpl" />
-    <bean id="booksResource" class="org.codingpedia.demo.rest.resource.book.BooksResource" />
+    <bean id="bookDao" class="org.laczkoboti.bookStore.rest.dao.BookDaoJPA2Impl"/>
+    <bean id="bookService" class="org.laczkoboti.bookStore.rest.service.BookServiceDbAccessImpl" />
+    <bean id="booksResource" class="org.laczkoboti.bookStore.rest.resource.book.BookResource" />
 
-    <bean id="versionService" class="org.codingpedia.demo.rest.resource.manifest.ManifestService" />
+    <bean id="versionService" class="org.laczkoboti.bookStore.rest.resource.manifest.ManifestService" />
 
-    <bean id="restDemoDS" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">
-        <property name="jndiName" value="java:comp/env/jdbc/restDemoDB" />
+    <bean id="bookStoreDS" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">
+        <property name="jndiName" value="java:comp/env/jdbc/bookStore" />
         <property name="resourceRef" value="true" />
     </bean>
 </beans>
