@@ -92,7 +92,7 @@ public class BookServiceDbAccessImplTest {
         when(booksDao.getBookById(SOME_ID)).thenReturn(bookEntity);
         doNothing().when(booksDao).updateBook(any(BookEntity.class));
 
-        Book book = new Book(bookEntity);
+        Book book = new Book(bookEntity, true);
         book.setTitle(SOME_TITLE);
         sut.updatePartiallyBook(book);
 

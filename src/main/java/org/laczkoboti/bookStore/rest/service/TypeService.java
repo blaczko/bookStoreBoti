@@ -4,58 +4,56 @@ import java.util.List;
 
 import org.laczkoboti.bookStore.rest.errorhandling.AppException;
 import org.laczkoboti.bookStore.rest.errorhandling.CustomReasonPhraseException;
-import org.laczkoboti.bookStore.rest.resource.book.Book;
+import org.laczkoboti.bookStore.rest.resource.type.Type;
 
 
-public interface BookService {
+public interface TypeService {
 
     /*
      * ******************** Create related methods **********************
      * */
-    public Long createBook(Book book) throws AppException;
-    public void createBooks(List<Book> books) throws AppException;
+    public Long createType(Type type) throws AppException;
+    public void createTypes(List<Type> types) throws AppException;
 
 
 	/*
 	 ******************** Read related methods ********************
 	  */
     /**
-     *
-     * @param orderByInsertionDate - if set, it represents the order by criteria (ASC or DESC) for displaying books
-     * @param numberDaysToLookBack - if set, it represents number of days to look back for books, null
-     * @return list with books coressponding to search criterias
+
+     * @return list with types coressponding to search criterias
      * @throws AppException
      */
-    public List<Book> getBooks() throws AppException;
+    public List<Type> getTypes() throws AppException;
 
     /**
-     * Returns a book given its id
+     * Returns a type given its id
      *
      * @param id
      * @return
      * @throws AppException
      */
-    public Book getBookById(Long id) throws AppException;
+    public Type getTypeById(Long id) throws AppException;
 
     /*
      * ******************** Update related methods **********************
      * */
-    public void updateFullyBook(Book book) throws AppException;
-    public void updatePartiallyBook(Book book) throws AppException;
+    public void updateFullyType(Type type) throws AppException;
+    public void updatePartiallyType(Type type) throws AppException;
 
 
     /*
      * ******************** Delete related methods **********************
      * */
-    public void deleteBookById(Long id);
+    public void deleteTypeById(Long id);
 
-    /** removes all books */
-    public void deleteBooks();
+    /** removes all types */
+    public void deleteTypes();
 
     /*
      * ******************** Helper methods **********************
      * */
-    public Book verifyBookExistenceById(Long id);
+    public Type verifyTypeExistenceById(Long id);
 
     /**
      * Empty method generating a Business Exception

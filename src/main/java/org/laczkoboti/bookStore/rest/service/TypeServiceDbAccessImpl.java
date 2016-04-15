@@ -7,32 +7,32 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.laczkoboti.bookStore.rest.dao.BooksDao;
-import org.laczkoboti.bookStore.rest.dao.BookEntity;
+import org.laczkoboti.bookStore.rest.dao.TypesDao;
+import org.laczkoboti.bookStore.rest.dao.TypeEntity;
 import org.laczkoboti.bookStore.rest.errorhandling.AppException;
 import org.laczkoboti.bookStore.rest.errorhandling.CustomReasonPhraseException;
 import org.laczkoboti.bookStore.rest.filters.AppConstants;
 import org.laczkoboti.bookStore.rest.helpers.NullAwareBeanUtilsBean;
-import org.laczkoboti.bookStore.rest.resource.book.Book;
+import org.laczkoboti.bookStore.rest.resource.type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class BookServiceDbAccessImpl implements BookService {
+public class TypeServiceDbAccessImpl implements TypeService {
 
     @Autowired
-    BooksDao booksDao;
+    TypesDao typesDao;
 
     /********************* Create related methods implementation ***********************/
     @Transactional("transactionManager")
-    public Long createBook(Book book) throws AppException {
+    public Long createType(Type type) throws AppException {
 
-        validateInputForCreation(book);
-        return booksDao.createBook(new BookEntity(book));
+        validateInputForCreation(type);
+        return typesDao.createType(new TypeEntity(type));
     }
 
-    private void validateInputForCreation(Book book) throws AppException {
+    private void validateInputForCreation(Type type) throws AppException {
 
-        if(book.getTitle() == null){
+        if(type.getType() == null){
             throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), 400, "Provided data not sufficient for insertion",
                     "Please verify that the title is properly generated/set", AppConstants.BLOG_POST_URL);
         }
@@ -40,19 +40,19 @@ public class BookServiceDbAccessImpl implements BookService {
     }
 
     @Transactional("transactionManager")
-    public void createBooks(List<Book> books) throws AppException {
-        for (Book book : books) {
-            createBook(book);
+    public void createTypes(List<Type> types) throws AppException {
+        for (Type type : types) {
+            createType(type);
         }
     }
 
 
     // ******************** Read related methods implementation **********************
-    public List<Book> getBooks() throws AppException {
+    public List<Type> getTypes() throws AppException {
 
-        List<BookEntity> books = booksDao.getBooks();
+        List<TypeEntity> types = typesDao.getTypes();
 
-        return getBooksFromEntities(books);
+        return getTypesFromEntities(types);
     }
 
     private boolean isOrderByInsertionDateParameterValid(
@@ -61,23 +61,23 @@ public class BookServiceDbAccessImpl implements BookService {
                 && !("ASC".equalsIgnoreCase(orderByInsertionDate) || "DESC".equalsIgnoreCase(orderByInsertionDate));
     }
 
-    public Book getBookById(Long id) throws AppException {
-        BookEntity bookById = booksDao.getBookById(id);
-        if(bookById == null){
+    public Type getTypeById(Long id) throws AppException {
+        TypeEntity typeById = typesDao.getTypeById(id);
+        if(typeById == null){
             throw new AppException(Response.Status.NOT_FOUND.getStatusCode(),
                     404,
-                    "The book you requested with id " + id + " was not found in the database",
-                    "Verify the existence of the book with the id " + id + " in the database",
+                    "The type you requested with id " + id + " was not found in the database",
+                    "Verify the existence of the type with the id " + id + " in the database",
                     AppConstants.BLOG_POST_URL);
         }
 
-        return new Book(booksDao.getBookById(id), true);
+        return new Type(typesDao.getTypeById(id), true);
     }
 
-    private List<Book> getBooksFromEntities(List<BookEntity> bookEntities) {
-        List<Book> response = new ArrayList<Book>();
-        for(BookEntity bookEntity : bookEntities){
-            response.add(new Book(bookEntity, true));
+    private List<Type> getTypesFromEntities(List<TypeEntity> typeEntities) {
+        List<Type> response = new ArrayList<Type>();
+        for(TypeEntity typeEntity : typeEntities){
+            response.add(new Type(typeEntity, true));
         }
 
         return response;
@@ -85,82 +85,81 @@ public class BookServiceDbAccessImpl implements BookService {
 
     /********************* UPDATE-related methods implementation ***********************/
     @Transactional("transactionManager")
-    public void updateFullyBook(Book book) throws AppException {
+    public void updateFullyType(Type type) throws AppException {
         //do a validation to verify FULL update with PUT
-        if(isFullUpdate(book)){
+        if(isFullUpdate(type)){
             throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(),
                     400,
                     "Please specify all properties for Full UPDATE",
-                    "required properties - id, title, feed, lnkOnBookpedia, description" ,
+                    "required properties - id, title, feed, lnkOnTypepedia, description" ,
                     AppConstants.BLOG_POST_URL);
         }
 
-        Book verifyBookExistenceById = verifyBookExistenceById(book.getId());
-        if(verifyBookExistenceById == null){
+        Type verifyTypeExistenceById = verifyTypeExistenceById(type.getId());
+        if(verifyTypeExistenceById == null){
             throw new AppException(Response.Status.NOT_FOUND.getStatusCode(),
                     404,
                     "The resource you are trying to update does not exist in the database",
-                    "Please verify existence of data in the database for the id - " + book.getId(),
+                    "Please verify existence of data in the database for the id - " + type.getId(),
                     AppConstants.BLOG_POST_URL);
         }
 
-        booksDao.updateBook(new BookEntity(book));
+        typesDao.updateType(new TypeEntity(type));
     }
 
     /**
-     * Verifies the "completeness" of book resource sent over the wire
+     * Verifies the "completeness" of type resource sent over the wire
      *
-     * @param book
+     * @param type
      * @return
      */
-    private boolean isFullUpdate(Book book) {
-        return book.getId() == null
-                || book.getTitle() == null
-                || book.getDescription() == null;
+    private boolean isFullUpdate(Type type) {
+        return type.getId() == null
+                || type.getType() == null;
     }
 
     /********************* DELETE-related methods implementation ***********************/
     @Transactional("transactionManager")
-    public void deleteBookById(Long id) {
-        booksDao.deleteBookById(id);
+    public void deleteTypeById(Long id) {
+        typesDao.deleteTypeById(id);
     }
 
     @Transactional("transactionManager")
-    public void deleteBooks() {
-        booksDao.deleteBooks();
+    public void deleteTypes() {
+        typesDao.deleteTypes();
     }
 
-    public Book verifyBookExistenceById(Long id) {
-        BookEntity bookById = booksDao.getBookById(id);
-        if(bookById == null){
+    public Type verifyTypeExistenceById(Long id) {
+        TypeEntity typeById = typesDao.getTypeById(id);
+        if(typeById == null){
             return null;
         } else {
-            return new Book(bookById, true);
+            return new Type(typeById, true);
         }
     }
 
     @Transactional("transactionManager")
-    public void updatePartiallyBook(Book book) throws AppException {
+    public void updatePartiallyType(Type type) throws AppException {
         //do a validation to verify existence of the resource
-        Book verifyBookExistenceById = verifyBookExistenceById(book.getId());
-        if(verifyBookExistenceById == null){
+        Type verifyTypeExistenceById = verifyTypeExistenceById(type.getId());
+        if(verifyTypeExistenceById == null){
             throw new AppException(Response.Status.NOT_FOUND.getStatusCode(),
                     404,
                     "The resource you are trying to update does not exist in the database",
-                    "Please verify existence of data in the database for the id - " + book.getId(),
+                    "Please verify existence of data in the database for the id - " + type.getId(),
                     AppConstants.BLOG_POST_URL);
         }
-        copyPartialProperties(verifyBookExistenceById, book);
-        booksDao.updateBook(new BookEntity(verifyBookExistenceById));
+        copyPartialProperties(verifyTypeExistenceById, type);
+        typesDao.updateType(new TypeEntity(verifyTypeExistenceById));
 
     }
 
-    private void copyPartialProperties(Book verifyBookExistenceById,
-                                       Book book) {
+    private void copyPartialProperties(Type verifyTypeExistenceById,
+                                       Type type) {
 
         BeanUtilsBean notNull=new NullAwareBeanUtilsBean();
         try {
-            notNull.copyProperties(verifyBookExistenceById, book);
+            notNull.copyProperties(verifyTypeExistenceById, type);
         } catch (IllegalAccessException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -175,8 +174,8 @@ public class BookServiceDbAccessImpl implements BookService {
         throw new CustomReasonPhraseException(4000, "message attached to the Custom Reason Phrase Exception");
     }
 
-    public void setBooksDao(BooksDao booksDao) {
-        this.booksDao = booksDao;
+    public void setTypesDao(TypesDao typesDao) {
+        this.typesDao = typesDao;
     }
 
 }

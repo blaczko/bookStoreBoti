@@ -36,6 +36,10 @@
     <bean id="bookService" class="org.laczkoboti.bookStore.rest.service.BookServiceDbAccessImpl" />
     <bean id="booksResource" class="org.laczkoboti.bookStore.rest.resource.book.BookResource" />
 
+    <bean id="typeDao" class="org.laczkoboti.bookStore.rest.dao.TypeDaoJPA2Impl"/>
+    <bean id="typeService" class="org.laczkoboti.bookStore.rest.service.TypeServiceDbAccessImpl" />
+    <bean id="typeResource" class="org.laczkoboti.bookStore.rest.resource.type.TypeResource" />
+
     <bean id="versionService" class="org.laczkoboti.bookStore.rest.resource.manifest.ManifestService" />
 
     <bean id="bookStoreDS" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">

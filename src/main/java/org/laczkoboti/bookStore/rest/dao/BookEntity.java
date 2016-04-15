@@ -2,12 +2,16 @@ package org.laczkoboti.bookStore.rest.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.*;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.hibernate.annotations.Fetch;
 import org.laczkoboti.bookStore.rest.resource.book.Book;
+import org.laczkoboti.bookStore.rest.resource.type.Type;
 
 
 @Entity
@@ -28,6 +32,12 @@ public class BookEntity implements Serializable {
     @Column(name="description")
     private String description;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "booktotype",
+    joinColumns = { @JoinColumn(name = "bookId", nullable = false, updatable = false) },
+    inverseJoinColumns = { @JoinColumn(name = "typeId", nullable = false, updatable = false) })
+    private Collection<TypeEntity> types = new ArrayList<TypeEntity>();
+
     public BookEntity(){}
 
     public BookEntity(String title, String description) {
@@ -38,15 +48,20 @@ public class BookEntity implements Serializable {
     }
 
     public BookEntity(Book book){
-        try {
-            BeanUtils.copyProperties(this, book);
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        this.id = book.getId();
+        this.title = book.getTitle();
+        this.description = book.getDescription();
+        for (Type t:book.getTypes()){
+            this.getTypes().add(new TypeEntity(t));
         }
+    }
+
+    public Collection<TypeEntity> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Collection<TypeEntity> types) {
+        this.types = types;
     }
 
     public String getTitle() {
@@ -73,5 +88,19 @@ public class BookEntity implements Serializable {
         this.id = id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        BookEntity that = (BookEntity) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

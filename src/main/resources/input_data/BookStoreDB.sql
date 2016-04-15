@@ -38,7 +38,15 @@ CREATE TABLE `books` (
 LOCK TABLES `books` WRITE;
 LOCK TABLES `podcasts` WRITE;
 /*!40000 ALTER TABLE `podcasts` DISABLE KEYS */;
+truncate table `books`;
+truncate table `types`;
+truncate table `booktotype`;
+
 INSERT INTO `books` VALUES (1,'Amintiri din copilarie','blabklablab1'),(2,'Baltagul','BaltagulBaltagulBaltagul'),(3,'Altceva','dfddddddddddddddddd');
+INSERT INTO `types` VALUES (1,'drama'),(2,'comedy'),(3,'Altceva');
+INSERT INTO `booktotype` VALUES (1,1),(2,2),(3,3),(1,2),(2,3);
+
+
 /*!40000 ALTER TABLE `podcasts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

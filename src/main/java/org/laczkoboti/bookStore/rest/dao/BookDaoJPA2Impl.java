@@ -1,16 +1,12 @@
 package org.laczkoboti.bookStore.rest.dao;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 public class BookDaoJPA2Impl implements BooksDao {
@@ -44,9 +40,16 @@ public class BookDaoJPA2Impl implements BooksDao {
     public void deleteBookById(Long id) {
 
         BookEntity book = entityManager.find(BookEntity.class, id);
+        for (TypeEntity type : book.getTypes()) {
+            type.getBooks().remove(book);
+            entityManager.persist(book);
+        }
+        book.setTypes(new HashSet<TypeEntity>());
+        entityManager.persist(book);
+        entityManager.flush();
         entityManager.remove(book);
-
     }
+
 
     public Long createBook(BookEntity book) {
 

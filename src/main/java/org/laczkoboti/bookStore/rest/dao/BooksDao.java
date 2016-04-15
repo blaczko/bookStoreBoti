@@ -2,11 +2,6 @@ package org.laczkoboti.bookStore.rest.dao;
 
 import java.util.List;
 
-/**
- *
- * @author ama
- * @see <a href="http://www.codingpedia.org/ama/spring-mybatis-integration-example/">http://www.codingpedia.org/ama/spring-mybatis-integration-example/</a>
- */
 public interface BooksDao {
 
     public List<BookEntity> getBooks();

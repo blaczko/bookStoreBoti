@@ -2,6 +2,8 @@ package org.laczkoboti.bookStore.rest.resource.book;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -11,6 +13,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.laczkoboti.bookStore.rest.dao.BookEntity;
+import org.laczkoboti.bookStore.rest.dao.TypeEntity;
+import org.laczkoboti.bookStore.rest.resource.type.Type;
 
 /**
  * Book resource placeholder for json/xml representation
@@ -34,15 +38,16 @@ public class Book implements Serializable {
     @XmlElement(name = "description")
     private String description;
 
-    public Book(BookEntity bookEntity){
-        try {
-            BeanUtils.copyProperties(this, bookEntity);
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+    private Collection<Type> types = new ArrayList<Type>();
+
+    public Book(BookEntity bookEntity, boolean recursive){
+        this.id = bookEntity.getId();
+        this.title = bookEntity.getTitle();
+        this.description = bookEntity.getDescription();
+        if (recursive) {
+            for (TypeEntity t : bookEntity.getTypes()) {
+                this.getTypes().add(new Type(t, false));
+            }
         }
     }
 
@@ -54,6 +59,14 @@ public class Book implements Serializable {
     }
 
     public Book(){}
+
+    public Collection<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Collection<Type> types) {
+        this.types = types;
+    }
 
     public String getTitle() {
         return title;
