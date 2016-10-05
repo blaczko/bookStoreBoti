@@ -27,6 +27,9 @@
             <id>Abstraction issuesJava</id>
           </State>
           <State>
+            <id>Android</id>
+          </State>
+          <State>
             <id>Android Lint</id>
           </State>
           <State>
@@ -51,6 +54,9 @@
             <id>Control flow issuesJava</id>
           </State>
           <State>
+            <id>CorrectnessLintAndroid</id>
+          </State>
+          <State>
             <id>Data flow issuesJava</id>
           </State>
           <State>
@@ -60,10 +66,16 @@
             <id>Encapsulation issuesJava</id>
           </State>
           <State>
+            <id>GSPGrailsGroovy</id>
+          </State>
+          <State>
             <id>General</id>
           </State>
           <State>
             <id>Google Web Toolkit issues</id>
+          </State>
+          <State>
+            <id>GrailsGroovy</id>
           </State>
           <State>
             <id>Groovy</id>
@@ -81,7 +93,16 @@
             <id>JavaScript</id>
           </State>
           <State>
+            <id>LintAndroid</id>
+          </State>
+          <State>
+            <id>Maven</id>
+          </State>
+          <State>
             <id>Naming conventionsJava</id>
+          </State>
+          <State>
+            <id>Plugin DevKit</id>
           </State>
           <State>
             <id>Properties Files</id>
@@ -107,7 +128,15 @@
           <State>
             <id>XMLSpring CoreSpring</id>
           </State>
+          <State>
+            <id>XPath</id>
+          </State>
         </expanded-state>
+        <selected-state>
+          <State>
+            <id>Android</id>
+          </State>
+        </selected-state>
       </profile-state>
     </entry>
   </component>
