@@ -2,6 +2,10 @@ package org.laczkoboti.bookStore.rest.service.integration;
 
 import static org.mockito.Mockito.*;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.laczkoboti.bookStore.rest.dao.BooksDao;
 import org.laczkoboti.bookStore.rest.dao.BookEntity;
 import org.laczkoboti.bookStore.rest.errorhandling.AppException;
@@ -15,6 +19,13 @@ import org.junit.runner.RunWith;
 import org.laczkoboti.bookStore.rest.service.BookServiceDbAccessImpl;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.xml.sax.SAXException;
+
+import javax.swing.text.BadLocationException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BookServiceDbAccessImplTest {
@@ -117,6 +128,52 @@ public class BookServiceDbAccessImplTest {
             Assert.assertEquals(e.getCode(), 404);
         }
 
+    }
+
+    @Test
+    public void testBoti() throws IOException, BadLocationException, ParserConfigurationException, SAXException {
+
+
+        PrintWriter pw = new PrintWriter(new File("test.csv"));
+        StringBuilder sb = new StringBuilder();
+        sb.append("id");
+        sb.append(',');
+        sb.append("title");
+        sb.append(',');
+        sb.append("content");
+        sb.append(',');
+        sb.append("url");
+        sb.append('\n');
+
+        int counter = 1;
+        for (int i = 1; i<264; i++) {
+            String urlString = "http://tudtad-e.eu/erdekessegek?page=" + i;
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = Jsoup.connect(urlString).get();
+
+            Elements divs = doc.select("div").select("[class=content_item]");
+
+            for (Element contentDiv : divs) {
+                String title = contentDiv.children().select("a").select("[class=content_title]").text();
+                String content = contentDiv.children().select("div").select("[class=content_c]").text();
+                String img_url = contentDiv.children().select("div").select("[class=img_bg]").select("img").attr("src");
+//                System.out.println(img_url);
+                sb.append(counter);
+                sb.append(',');
+                sb.append('"'+ title + '"');
+                sb.append(',');
+                sb.append('"' + content + '"');
+                sb.append(',');
+                sb.append('"' + img_url + '"');
+                sb.append('\n');
+                counter++;
+
+            }
+        }
+
+        pw.write(sb.toString());
+        pw.close();
     }
 
 }
