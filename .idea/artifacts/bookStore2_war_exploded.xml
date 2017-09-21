@@ -4,7 +4,7 @@
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="bookStore2" />
+          <element id="module-output" name="hallodte" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.glassfish.jersey.ext:jersey-spring3:2.22.2" />
@@ -84,7 +84,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/target/bookStore2-0.0.1-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="bookStore2/web/Web" />
+      <element id="javaee-facet-resources" facet="hallodte/web/Web" />
     </root>
   </artifact>
 </component>
